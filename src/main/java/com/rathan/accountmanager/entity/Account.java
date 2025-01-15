@@ -1,16 +1,20 @@
 package com.rathan.accountmanager.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.time.LocalDate;
 
 @Entity
+@Data
 public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -51,12 +55,17 @@ public class Account {
 
 enum InterestPaidOn {
     MATURITY,
-    MONTHLY
+    DAILY,
+    MONTHLY,
+    QUARTERLY,
+    ANNUALLY
 }
 
 enum InterestCalculationDuration {
     DAILY,
-    MONTHLY
+    MONTHLY,
+    QUARTERLY,
+    ANNUALLY
 }
 
 enum Currency {

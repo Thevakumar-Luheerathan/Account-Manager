@@ -1,8 +1,11 @@
 package com.rathan.accountmanager.service;
 
 import com.rathan.accountmanager.entity.Account;
+import com.rathan.accountmanager.entity.User;
 import com.rathan.accountmanager.repository.AccountRepository;
+import com.rathan.accountmanager.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,24 +15,28 @@ public class AccountService {
 
     @Autowired
     private AccountRepository accountRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     public List<Account> findAccountsByUser(String username) {
         return accountRepository.findByUserUsername(username);
     }
 
-    public Account createAccount(String username, Account account) {
-        // Logic to create an account for the user
-        return accountRepository.save(account);
+    public void createAccount(String username, Account account) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+        account.setUser(user);
+        accountRepository.save(account);
     }
 
     public Account deleteAccountByAccNo(String username, String accNo) {
-        Account account = accountRepository.findByAccountNumber(accNo);
+        Account account = accountRepository.findByAccountNumberAndUser_Username(accNo, username);
         accountRepository.delete(account);
         return account;
     }
 
-    public Account getAccountByAccNo(String accNo) {
-        return accountRepository.findByAccountNumber(accNo);
+    public Account getAccountByAccNo(String accNo, String username) {
+        return accountRepository.findByAccountNumberAndUser_Username(accNo, username);
     }
 
     public Account updateAccountByAccNo( Account account) {
