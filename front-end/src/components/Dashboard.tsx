@@ -8,7 +8,7 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
   return (
     <Box sx={{ display: 'flex' }}>
       <SideMenu />
-      {/* <Stack
+      <Stack
         spacing={2}
         sx={{
           alignItems: 'center',
@@ -18,7 +18,7 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
         }}
       >
         <MainGrid />
-      </Stack> */}
+      </Stack>
     </Box>
   );
 }
